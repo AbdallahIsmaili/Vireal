@@ -5,11 +5,13 @@ import { MaterialIcons, Ionicons, Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 
 export default function CommunitiesScreen() {
   const { user, signOut } = useAuth();
+  const router = useRouter();
   const [menuVisible, setMenuVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const slideAnim = useRef(new Animated.Value(-320)).current;
@@ -141,6 +143,12 @@ export default function CommunitiesScreen() {
   const handleMenuItemPress = (item) => {
     console.log(`Pressed: ${item.title}`);
     toggleMenu();
+  };
+
+  const handleCreateCommunity = () => {
+    toggleMenu(); // Close menu first
+    // Fixed navigation - use the correct route path for your folder structure
+    router.push('/(community)'); // This matches app/(community)/index.jsx
   };
 
   const handleLogout = async () => {
@@ -464,6 +472,28 @@ export default function CommunitiesScreen() {
                       </TouchableOpacity>
                     </View>
                   </View>
+                </View>
+
+                {/* Create Community Button - Prominent placement */}
+                <View className="p-4 border-b border-gray-700/50">
+                  <TouchableOpacity
+                    className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-4 border border-purple-500/30"
+                    onPress={handleCreateCommunity}
+                    activeOpacity={0.8}
+                  >
+                    <View className="flex-row items-center">
+                      <View className="w-10 h-10 bg-purple-500/30 rounded-full items-center justify-center mr-3">
+                        <Ionicons name="add-circle" size={20} color="#d8b4fe" />
+                      </View>
+                      <View className="flex-1">
+                        <Text className="text-purple-300 text-sm font-medium">Start</Text>
+                        <Text className="text-white text-lg font-bold">Create Community</Text>
+                      </View>
+                      <View className="bg-purple-500/20 px-2 py-1 rounded-full border border-purple-500/40">
+                        <Ionicons name="arrow-forward" size={16} color="#d8b4fe" />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 </View>
 
                 {/* Menu Items with Enhanced Staggered Animation */}
