@@ -1,4 +1,4 @@
-import { Text, View, Image, TouchableOpacity, ScrollView, FlatList, Animated, Dimensions } from "react-native";
+import { Text, View, Image, TouchableOpacity, ScrollView, FlatList, Animated, Dimensions, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "./_layout";
 import { MaterialIcons, Ionicons, Feather } from '@expo/vector-icons';
@@ -11,6 +11,7 @@ const { width, height } = Dimensions.get('window');
 export default function CommunitiesScreen() {
   const { user, signOut } = useAuth();
   const [menuVisible, setMenuVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const slideAnim = useRef(new Animated.Value(-320)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -22,6 +23,9 @@ export default function CommunitiesScreen() {
       opacity: new Animated.Value(1),
     }))
   ).current;
+
+  // Mock user coins data
+  const userCoins = 1250;
 
   // Mock data for communities
   const myCommunities = [
@@ -268,6 +272,25 @@ export default function CommunitiesScreen() {
                   <Ionicons name="menu" size={20} color="white" />
                 </TouchableOpacity>
                 
+                {/* Search Bar */}
+                <View className="flex-1 mx-4">
+                  <View className="flex-row items-center bg-gray-800/60 rounded-full px-4 py-1 border border-gray-700/50">
+                    <Ionicons name="search" size={18} color="#9CA3AF" />
+                    <TextInput
+                      className="flex-1 ml-3 text-white"
+                      placeholder="Search communities..."
+                      placeholderTextColor="#9CA3AF"
+                      value={searchQuery}
+                      onChangeText={setSearchQuery}
+                    />
+                    {searchQuery.length > 0 && (
+                      <TouchableOpacity onPress={() => setSearchQuery('')}>
+                        <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </View>
+                
                 <TouchableOpacity className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-600">
                   <Image 
                     source={{ uri: user?.avatar || 'https://cdn.vireal.com/default-avatar.png' }} 
@@ -278,10 +301,10 @@ export default function CommunitiesScreen() {
               </View>
 
               {/* Enhanced Title with better styling */}
-              <View className="px-6 mb-12">
+              <View className="px-6 mt-4 mb-12">
                 <View className="relative">
-                  <Text className="text-white text-5xl font-black leading-tight tracking-tight">
-                    ✨ Discover your{'\n'}
+                  <Text className="text-white text-center text-5xl font-black leading-tight tracking-tight">
+                    Discover {'\n'}
                     <Text 
                       className="text-white"
                       style={{
@@ -292,7 +315,7 @@ export default function CommunitiesScreen() {
                         letterSpacing: -1
                       }}
                     >
-                      Perfect Communities!
+                      Communities!
                     </Text>
                   </Text>
                   {/* Subtle glow effect */}
@@ -414,15 +437,31 @@ export default function CommunitiesScreen() {
                   </View>
                   
                   {/* User Info */}
-                  <View className="flex-row items-center">
+                  <View className="flex-row items-center mb-4">
                     <Image 
                       source={{ uri: user?.avatar || 'https://cdn.vireal.com/default-avatar.png' }} 
                       className="w-12 h-12 rounded-full border-2 border-gray-600"
                       resizeMode="cover"
                     />
-                    <View className="ml-3">
+                    <View className="ml-3 flex-1">
                       <Text className="text-white font-semibold">{user?.username || 'User'}</Text>
                       <Text className="text-gray-400 text-sm">{user?.email || 'user@example.com'}</Text>
+                    </View>
+                  </View>
+
+                  {/* Coins Display */}
+                  <View className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 rounded-2xl p-4 border border-yellow-500/30">
+                    <View className="flex-row items-center">
+                      <View className="w-10 h-10 bg-yellow-500/30 rounded-full items-center justify-center mr-3">
+                        <Text className="text-2xl">🪙</Text>
+                      </View>
+                      <View className="flex-1">
+                        <Text className="text-yellow-400 text-sm font-medium">Your Coins</Text>
+                        <Text className="text-white text-lg font-bold">{userCoins.toLocaleString()}</Text>
+                      </View>
+                      <TouchableOpacity className="bg-yellow-500/20 px-3 py-1 rounded-full border border-yellow-500/40">
+                        <Text className="text-yellow-400 text-xs font-medium">Earn More</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
